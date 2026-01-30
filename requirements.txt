@@ -1,0 +1,14 @@
+# YouTube to MP3 CLI Tool Requirements
+
+# Python package for downloading YouTube videos
+yt-dlp>=2024.0.0
+
+# Note: The following are system dependencies that need to be installed separately:
+# - ffmpeg: Required for audio conversion and trimming
+#   Ubuntu/Debian: sudo apt install ffmpeg
+#   macOS: brew install ffmpeg
+#   Windows: Download from https://ffmpeg.org
+#
+# - bc: Required for calculating end-trim times
+#   Ubuntu/Debian: sudo apt install bc
+#   macOS: brew install bc (usually pre-installed)
