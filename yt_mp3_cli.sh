@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # YouTube to MP3 Downloader with Trim Options
-# Usage: ./yt-mp3.sh <youtube_url> [output_filename] [trim_start] [trim_end]
+# Usage: ./yt-mp3.sh <youtube_url> [output_dir] [output_filename] [trim_start] [trim_end]
 
 # Colors for output
 RED='\033[0;31m'
@@ -43,16 +43,18 @@ fi
 # Check if URL is provided
 if [ -z "$1" ]; then
     print_error "No YouTube URL provided"
-    echo "Usage: $0 <youtube_url> [output_filename] [trim_start] [trim_end]"
+    echo "Usage: $0 <youtube_url> [output_dir] [output_filename] [trim_start] [trim_end]"
     echo ""
     echo "Examples:"
     echo "  $0 https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-    echo "  $0 https://www.youtube.com/watch?v=dQw4w9WgXcQ my_song"
-    echo "  $0 https://www.youtube.com/watch?v=dQw4w9WgXcQ my_song 5"
-    echo "  $0 https://www.youtube.com/watch?v=dQw4w9WgXcQ my_song 5 10"
+    echo "  $0 https://www.youtube.com/watch?v=dQw4w9WgXcQ ~/Desktop/my_music"
+    echo "  $0 https://www.youtube.com/watch?v=dQw4w9WgXcQ ~/Desktop/my_music my_song"
+    echo "  $0 https://www.youtube.com/watch?v=dQw4w9WgXcQ ~/Desktop/my_music my_song 5"
+    echo "  $0 https://www.youtube.com/watch?v=dQw4w9WgXcQ ~/Desktop/my_music my_song 5 10"
     echo ""
     echo "Arguments:"
     echo "  youtube_url     - YouTube video URL (required)"
+    echo "  output_dir      - Output directory (optional, defaults to ./downloads)"
     echo "  output_filename - Custom filename (optional, defaults to video title)"
     echo "  trim_start      - Seconds to trim from beginning (optional, e.g., 5 or 2.5)"
     echo "  trim_end        - Seconds to trim from end (optional, e.g., 10 or 7.5)"
@@ -60,10 +62,10 @@ if [ -z "$1" ]; then
 fi
 
 URL=$1
-OUTPUT_DIR="./downloads"
-FILENAME=${2:-"%(title)s"}
-TRIM_START=${3:-0}
-TRIM_END=${4:-0}
+OUTPUT_DIR=${2:-"./downloads"}
+FILENAME=${3:-"%(title)s"}
+TRIM_START=${4:-0}
+TRIM_END=${5:-0}
 
 # Create output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
@@ -85,6 +87,7 @@ yt-dlp \
     --audio-quality 0 \
     --output "$TEMP_FILE" \
     --progress \
+    --extractor-args "youtube:player_client=android" \
     "$URL"
 
 if [ $? -ne 0 ]; then
